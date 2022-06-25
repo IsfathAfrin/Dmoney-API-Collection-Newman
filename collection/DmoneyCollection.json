@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "8e58ef4d-0a52-4781-8c37-8ab5edd0be3e",
-		"name": "First Task Users API_Collection",
+		"name": "Dmoney_Users API_Collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21487211"
 	},
@@ -424,6 +424,157 @@
 			"response": []
 		},
 		{
+			"name": "Create New User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var radnomDigits=_.random(1000000,9999999);\r",
+							"var code=\"0150\";\r",
+							"var code_nid=\"123\"\r",
+							"var phoneNumber=code+radnomDigits;\r",
+							"var nid=code_nid+radnomDigits;\r",
+							"pm.collectionVariables.set(\"phoneNumber\",phoneNumber)\r",
+							"pm.environment.set(\"phoneNumber\",phoneNumber)\r",
+							"\r",
+							"pm.collectionVariables.set(\"nid\",nid)\r",
+							"pm.environment.set(\"nid\",nid)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"User should create successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.contains('User created successfully');\r",
+							"});\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var id=jsonData.user.id;\r",
+							"pm.collectionVariables.set(\"id\",id);\r",
+							"pm.environment.set(\"id\",id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "X-AUTH-SECRET-KEY",
+						"value": "{{pwKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"{{$randomFullName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"{{$randomPassword}}\",\r\n    \"phone_number\":\"{{phoneNumber}}\",\r\n    \"nid\":\"{{nid}}\",\r\n    \"role\":\"Customer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create existing user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var radnomDigits=_.random(1000000,9999999);\r",
+							"var code=\"0150\";\r",
+							"var code_nid=\"123\"\r",
+							"var phoneNumber=code+radnomDigits;\r",
+							"var nid=code_nid+radnomDigits;\r",
+							"pm.collectionVariables.set(\"phoneNumber\",phoneNumber)\r",
+							"pm.environment.set(\"phoneNumber\",phoneNumber)\r",
+							"\r",
+							"pm.collectionVariables.set(\"nid\",nid)\r",
+							"pm.environment.set(\"nid\",nid)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 208\", function () {\r",
+							"    pm.response.to.have.status(208);\r",
+							"});\r",
+							"pm.test(\"User should not create if exists\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.contains('User already exists');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "X-AUTH-SECRET-KEY",
+						"value": "{{pwKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"Mrs. Kenny Skiles\",\r\n        \"email\": \"Isom55@yahoo.com\",\r\n        \"password\": \"axwU39PbIcx2USG\",\r\n        \"phone_number\": \"01504810551\",\r\n        \"nid\": \"1234810551\",\r\n        \"role\": \"Customer\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Search User",
 			"event": [
 				{
@@ -577,157 +728,6 @@
 							"key": "email",
 							"value": "Isom@yahoo.com"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create New User",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"var radnomDigits=_.random(1000000,9999999);\r",
-							"var code=\"0150\";\r",
-							"var code_nid=\"123\"\r",
-							"var phoneNumber=code+radnomDigits;\r",
-							"var nid=code_nid+radnomDigits;\r",
-							"pm.collectionVariables.set(\"phoneNumber\",phoneNumber)\r",
-							"pm.environment.set(\"phoneNumber\",phoneNumber)\r",
-							"\r",
-							"pm.collectionVariables.set(\"nid\",nid)\r",
-							"pm.environment.set(\"nid\",nid)"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 201\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							"pm.test(\"User should create successfully\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.message).to.contains('User created successfully');\r",
-							"});\r",
-							"\r",
-							"var jsonData=pm.response.json();\r",
-							"var id=jsonData.user.id;\r",
-							"pm.collectionVariables.set(\"id\",id);\r",
-							"pm.environment.set(\"id\",id);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{token}}",
-						"type": "text"
-					},
-					{
-						"key": "X-AUTH-SECRET-KEY",
-						"value": "{{pwKey}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"{{$randomFullName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"{{$randomPassword}}\",\r\n    \"phone_number\":\"{{phoneNumber}}\",\r\n    \"nid\":\"{{nid}}\",\r\n    \"role\":\"Customer\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/user/create",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"user",
-						"create"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create existing user",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"var radnomDigits=_.random(1000000,9999999);\r",
-							"var code=\"0150\";\r",
-							"var code_nid=\"123\"\r",
-							"var phoneNumber=code+radnomDigits;\r",
-							"var nid=code_nid+radnomDigits;\r",
-							"pm.collectionVariables.set(\"phoneNumber\",phoneNumber)\r",
-							"pm.environment.set(\"phoneNumber\",phoneNumber)\r",
-							"\r",
-							"pm.collectionVariables.set(\"nid\",nid)\r",
-							"pm.environment.set(\"nid\",nid)"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 208\", function () {\r",
-							"    pm.response.to.have.status(208);\r",
-							"});\r",
-							"pm.test(\"User should not create if exists\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.message).to.contains('User already exists');\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{token}}",
-						"type": "text"
-					},
-					{
-						"key": "X-AUTH-SECRET-KEY",
-						"value": "{{pwKey}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n        \"name\": \"Mrs. Kenny Skiles\",\r\n        \"email\": \"Isom55@yahoo.com\",\r\n        \"password\": \"axwU39PbIcx2USG\",\r\n        \"phone_number\": \"01504810551\",\r\n        \"nid\": \"1234810551\",\r\n        \"role\": \"Customer\"\r\n    }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/user/create",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"user",
-						"create"
 					]
 				}
 			},
