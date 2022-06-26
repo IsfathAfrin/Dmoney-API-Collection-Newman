@@ -1,7 +1,7 @@
  # Dmoney-API-Collection-Newman 
  # API Testing with Postman + Report Generate with Newman 
 
-     1.https://documenter.getpostman.com/view/21487211/UzBqqRiG
+ 1. https://documenter.getpostman.com/view/21487211/UzBqqRiG
 
  # How to run this project
      1.Clone this project 
