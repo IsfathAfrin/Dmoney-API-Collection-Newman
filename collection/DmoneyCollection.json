@@ -13,6 +13,13 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Login successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Login successfully\");\r",
+							"});\r",
 							"var jsonData = pm.response.json();\r",
 							"var token = jsonData.token;\r",
 							"pm.collectionVariables.set(\"token\", token)\r",
@@ -263,12 +270,11 @@
 						"exec": [
 							"pm.test(\"User list should show\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.message).to.contains(\"User list\");\r",
+							"    pm.expect(jsonData.message).contains('User list')\r",
 							"});\r",
-							"\r",
 							"pm.test(\"User 1 id is 1\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.users[0].id).to.eql(3);\r",
+							"    pm.expect(jsonData.users[0].id).to.eql(22);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -502,7 +508,7 @@
 			"response": []
 		},
 		{
-			"name": "Create existing user",
+			"name": "Create existing user Copy",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -585,15 +591,35 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Rsponse is showing id\", function () {\r",
+							"pm.test(\"User search by id\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.user.phone_number).to.eql(\"01509206386\");\r",
-							"});"
+							"    pm.expect(jsonData.user.id).to.eql(pm.collectionVariables.get(\"id\"));\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							""
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [
@@ -604,12 +630,21 @@
 					},
 					{
 						"key": "X-AUTH-SECRET-KEY",
-						"value": "ROADTOSDET",
+						"value": "{{pwKey}}",
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{baseUrl}}/user/search?phone_number=01509206386",
+					"raw": "{{baseUrl}}/user/search?id={{id}}",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -619,8 +654,8 @@
 					],
 					"query": [
 						{
-							"key": "phone_number",
-							"value": "01509206386"
+							"key": "id",
+							"value": "{{id}}"
 						}
 					]
 				}
@@ -681,7 +716,7 @@
 			"response": []
 		},
 		{
-			"name": "Search User if user inputs wrong email",
+			"name": "Search User if user inputs unregistered email",
 			"event": [
 				{
 					"listen": "test",
@@ -876,7 +911,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Delete user data\", function () {\r",
+							"pm.test(\"Deleted user data\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.message).to.contains(\"User deleted successfully\");\r",
 							"});"
@@ -938,7 +973,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Delete user data\", function () {\r",
+							"pm.test(\"Deleted user data\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.message).to.contains(\"User not found\");\r",
 							"});\r",
@@ -1090,27 +1125,26 @@
 		},
 		{
 			"key": "token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbG1hbkBncnIubGEiLCJwYXNzd29yZCI6IjEyMzQiLCJpYXQiOjE2NTYxNzA5OTcsImV4cCI6MTY1NjE3Mjc5N30.0G1ke39SycTyi7u_YCV5NBFSvL_KDtWkKuS4nqlV52I"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbG1hbkBncnIubGEiLCJwYXNzd29yZCI6IjEyMzQiLCJpYXQiOjE2NTYzNDY0ODQsImV4cCI6MTY1NjM0ODI4NH0.JrRUKD3_Veordm432U6x6DSJTVtJsNYQe3hfVw5V00o"
 		},
 		{
 			"key": "phoneNumber",
-			"value": "01505157141",
+			"value": "01508034962",
 			"type": "string"
 		},
 		{
 			"key": "nid",
-			"value": "1235157141",
-			"type": "string"
-		},
-		{
-			"key": "id",
-			"value": 3001,
+			"value": "1238034962",
 			"type": "string"
 		},
 		{
 			"key": "pwKey",
 			"value": "ROADTOSDET",
 			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": 3612
 		}
 	]
 }
